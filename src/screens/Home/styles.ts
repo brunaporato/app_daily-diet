@@ -2,6 +2,10 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { ArrowUpRight } from 'phosphor-react-native'
 import styled, { css } from 'styled-components/native'
 
+interface PercentCardProps {
+  type: 'red' | 'green'
+}
+
 export const HomeContainer = styled.View`
   flex: 1;
   background-color: ${({ theme }) => theme.COLORS.GRAY_700};
@@ -26,11 +30,12 @@ export const Avatar = styled.Image`
   /* border: 2px solid ${({ theme }) => theme.COLORS.GRAY_200}; */
 `
 
-export const PercentCard = styled.View`
+export const PercentCard = styled.View<PercentCardProps>`
   padding: 20px 16px;
   gap: 2px;
 
-  background-color: ${({ theme }) => theme.COLORS.GREEN_LIGHT};
+  background-color: ${({ theme, type }) =>
+    type === 'green' ? theme.COLORS.GREEN_LIGHT : theme.COLORS.RED_LIGHT};
   border-radius: 8px;
 
   align-items: center;
@@ -64,11 +69,12 @@ export const TouchableIcon = styled.TouchableOpacity`
   right: 8px;
 `
 
-export const PercentLinkIcon = styled(ArrowUpRight).attrs(({ theme }) => ({
-  color: theme.COLORS.GREEN_DARK,
-  size: 24,
-  weight: 'bold',
-}))``
+export const PercentLinkIcon = styled(ArrowUpRight)<PercentCardProps>`
+  color: ${({ theme, type }) =>
+    type === 'green' ? theme.COLORS.GREEN_DARK : theme.COLORS.RED_DARK};
+  font-size: 24px;
+  font-weight: bold;
+`
 
 export const HomeText = styled.Text`
   ${({ theme }) => css`

@@ -1,6 +1,5 @@
 import {
   Avatar,
-  BottomGradient,
   HeaderContainer,
   HomeContainer,
   HomeText,
@@ -73,15 +72,18 @@ export function Home() {
       ],
     },
   ])
+
+  const percentOnDiet = 90 > 50
+
   return (
     <HomeContainer>
       <HeaderContainer>
         <Image source={LogoImg} alt="Daily Diet's logo" />
         <Avatar src="https://github.com/brunaporato.png" />
       </HeaderContainer>
-      <PercentCard>
+      <PercentCard type={percentOnDiet ? 'green' : 'red'}>
         <TouchableIcon>
-          <PercentLinkIcon />
+          <PercentLinkIcon type={percentOnDiet ? 'green' : 'red'} />
         </TouchableIcon>
         <PercentText>90,86%</PercentText>
         <PercentSpan>das refeições dentro da dieta</PercentSpan>
