@@ -1,3 +1,4 @@
+import { LinearGradient } from 'expo-linear-gradient'
 import { ArrowUpRight } from 'phosphor-react-native'
 import styled, { css } from 'styled-components/native'
 
@@ -80,4 +81,8 @@ export const HomeText = styled.Text`
 export const ListHeader = styled.View`
   gap: 8px;
   margin-bottom: 32px;
+`
+
+export const BottomGradient = styled(LinearGradient)`
+  height: 160px;
 `

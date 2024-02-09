@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components/native'
 
 export const ListDayContainer = styled.View`
   gap: 8px;
+  margin-bottom: 32px;
 `
 
 export const ListDayTitle = styled.Text`
