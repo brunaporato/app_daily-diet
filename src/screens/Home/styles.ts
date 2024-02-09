@@ -47,22 +47,6 @@ export const PercentCard = styled.View<PercentCardProps>`
   height: 102px;
 `
 
-export const PercentText = styled.Text`
-  ${({ theme }) => css`
-    color: ${theme.COLORS.GRAY_100};
-    font-family: ${theme.FONT_FAMILY.BOLD};
-    font-size: ${theme.FONT_SIZE.XXL};
-  `}
-`
-
-export const PercentSpan = styled.Text`
-  ${({ theme }) => css`
-    color: ${theme.COLORS.GRAY_200};
-    font-family: ${theme.FONT_FAMILY.REGULAR};
-    font-size: ${theme.FONT_SIZE.SM};
-  `}
-`
-
 export const TouchableIcon = styled.TouchableOpacity`
   position: absolute;
   top: 8px;

@@ -6,8 +6,6 @@ import {
   ListHeader,
   PercentCard,
   PercentLinkIcon,
-  PercentSpan,
-  PercentText,
   TouchableIcon,
 } from './styles'
 import { FlatList, Image } from 'react-native'
@@ -15,6 +13,7 @@ import LogoImg from '../../assets/Logo.png'
 import { Button } from '../../components/Button'
 import { ListDay } from '../../components/ListDay'
 import { useState } from 'react'
+import { TitleNumberSpan } from '../../components/NumberWithText'
 
 export interface MealsType {
   name: string
@@ -85,8 +84,7 @@ export function Home() {
         <TouchableIcon>
           <PercentLinkIcon type={percentOnDiet ? 'green' : 'red'} />
         </TouchableIcon>
-        <PercentText>90,86%</PercentText>
-        <PercentSpan>das refeições dentro da dieta</PercentSpan>
+        <TitleNumberSpan title="90,86%" span="das refeições dentro da dieta" />
       </PercentCard>
       <ListHeader>
         <HomeText>Refeições</HomeText>

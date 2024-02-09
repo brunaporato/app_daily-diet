@@ -6,7 +6,7 @@ import {
   NunitoSans_400Regular,
   NunitoSans_700Bold,
 } from '@expo-google-fonts/nunito-sans'
-import { Home } from './src/screens/Home'
+import { Dashboard } from './src/screens/Dashboard'
 import { ThemeProvider } from 'styled-components'
 import theme from './src/theme'
 
@@ -15,7 +15,7 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <StatusBar style="auto" />
-      {fontsLoaded ? <Home /> : <Text>loading</Text>}
+      {fontsLoaded ? <Dashboard /> : <Text>loading</Text>}
     </ThemeProvider>
   )
 }
