@@ -44,7 +44,7 @@ export function NewMeal() {
         hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59
 
       if (isValidTime) {
-        const formattedTime = `${hours}:${minutes.toString().padStart(2, '0')}`
+        const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
         setFormattedTime(formattedTime)
       } else {
         setFormattedTime('')
@@ -73,7 +73,7 @@ export function NewMeal() {
           <TextInput
             label="Data"
             parentStyle={{ flex: 1 }}
-            keyboardType="decimal-pad"
+            keyboardType="number-pad"
             placeholder="DD/MM/AA"
             onChangeText={(text) => handleDateChange(text)}
             value={formattedDate}
@@ -81,7 +81,7 @@ export function NewMeal() {
           <TextInput
             label="Hora"
             parentStyle={{ flex: 1 }}
-            keyboardType="decimal-pad"
+            keyboardType="number-pad"
             placeholder="HH:MM"
             onChangeText={(text) => handleTimeChange(text)}
             value={formattedTime}
