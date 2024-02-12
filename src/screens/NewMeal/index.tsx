@@ -1,18 +1,23 @@
 import { TouchableOpacity } from 'react-native'
 import {
   DateTimeContainer,
+  Label,
   NewMealContainer,
   NewMealContent,
   NewMealHeader,
   NewMealTitle,
   ReturnIcon,
+  SelectOnDiet,
 } from './styles'
 import { TextInput } from '../../components/TextInput'
 import { useState } from 'react'
+import { Select } from '../../components/Select'
+import { Button } from '../../components/Button'
 
 export function NewMeal() {
   const [formattedDate, setFormattedDate] = useState('')
   const [formattedTime, setFormattedTime] = useState('')
+  const [isOnDiet, setIsOnDiet] = useState('')
 
   function handleDateChange(text: string) {
     const cleanedText = text.replace(/\D/g, '')
@@ -49,6 +54,10 @@ export function NewMeal() {
     }
   }
 
+  function toggleIsOnDiet(type: string) {
+    setIsOnDiet(type)
+  }
+
   return (
     <NewMealContainer>
       <NewMealHeader>
@@ -78,6 +87,20 @@ export function NewMeal() {
             value={formattedTime}
           />
         </DateTimeContainer>
+        <Label>Está dentro da dieta?</Label>
+        <SelectOnDiet>
+          <Select
+            type="positive"
+            isActive={isOnDiet === 'positive'}
+            onPress={() => toggleIsOnDiet('positive')}
+          />
+          <Select
+            type="negative"
+            isActive={isOnDiet === 'negative'}
+            onPress={() => toggleIsOnDiet('negative')}
+          />
+        </SelectOnDiet>
+        <Button title="Cadastrar refeição" />
       </NewMealContent>
     </NewMealContainer>
   )

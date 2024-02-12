@@ -42,3 +42,18 @@ export const DateTimeContainer = styled.View`
   flex-direction: row;
   gap: 20px;
 `
+export const SelectOnDiet = styled.View`
+  flex-direction: row;
+  gap: 8px;
+  flex: 1;
+`
+
+export const Label = styled.Text`
+  ${({ theme }) => css`
+    color: ${theme.COLORS.GRAY_200};
+    font-size: ${theme.FONT_SIZE.SM};
+    font-family: ${theme.FONT_FAMILY.BOLD};
+  `}
+
+  margin-bottom: 8px;
+`
