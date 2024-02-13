@@ -1,15 +1,34 @@
-import { ButtonContainer, ButtonIcon, ButtonTitle } from './styles'
+import { PencilSimpleLine, Plus, Trash } from 'phosphor-react-native'
+import { ButtonContainer, ButtonTitle } from './styles'
 
 interface ButtonProps {
-  hasIcon?: boolean
+  hasIcon?: 'plus' | 'edit' | 'remove'
   title: string
+  type?: 'primary' | 'secondary'
 }
 
-export function Button({ hasIcon = false, title }: ButtonProps) {
+export function Button({ hasIcon, title, type = 'primary' }: ButtonProps) {
+  let iconComponent = null
+
+  switch (hasIcon) {
+    case 'plus':
+      iconComponent = <Plus size={18} color="white" />
+      break
+    case 'edit':
+      iconComponent = <PencilSimpleLine size={18} color="white" />
+      break
+    case 'remove':
+      iconComponent = <Trash size={18} />
+      break
+    default:
+      iconComponent = null
+      break
+  }
+
   return (
-    <ButtonContainer>
-      {hasIcon && <ButtonIcon />}
-      <ButtonTitle>{title}</ButtonTitle>
+    <ButtonContainer type={type}>
+      {hasIcon && iconComponent}
+      <ButtonTitle type={type}>{title}</ButtonTitle>
     </ButtonContainer>
   )
 }

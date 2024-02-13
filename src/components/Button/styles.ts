@@ -1,8 +1,15 @@
-import { Plus } from 'phosphor-react-native'
 import styled, { css } from 'styled-components/native'
 
-export const ButtonContainer = styled.TouchableOpacity`
-  background-color: ${({ theme }) => theme.COLORS.GRAY_200};
+interface ButtonStyledProps {
+  type: 'primary' | 'secondary'
+}
+
+export const ButtonContainer = styled.TouchableOpacity<ButtonStyledProps>`
+  background-color: ${({ theme, type }) =>
+    type === 'primary' ? theme.COLORS.GRAY_200 : 'transparent'};
+  border: 1px solid
+    ${({ theme, type }) =>
+      type === 'primary' ? 'transparent' : theme.COLORS.GRAY_100};
   border-radius: 6px;
   padding: 16px 24px;
 
@@ -12,14 +19,9 @@ export const ButtonContainer = styled.TouchableOpacity`
   gap: 12px;
 `
 
-export const ButtonIcon = styled(Plus).attrs(({ theme }) => ({
-  color: theme.COLORS.WHITE,
-  size: 16,
-}))``
-
-export const ButtonTitle = styled.Text`
-  ${({ theme }) => css`
-    color: ${theme.COLORS.WHITE};
+export const ButtonTitle = styled.Text<ButtonStyledProps>`
+  ${({ theme, type }) => css`
+    color: ${type === 'primary' ? theme.COLORS.WHITE : theme.COLORS.GRAY_100};
     font-family: ${theme.FONT_FAMILY.BOLD};
     font-size: ${theme.FONT_SIZE.SM};
   `}

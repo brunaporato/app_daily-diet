@@ -88,7 +88,7 @@ export function Home() {
       </PercentCard>
       <ListHeader>
         <HomeText>Refeições</HomeText>
-        <Button hasIcon title="Nova refeição" />
+        <Button hasIcon="plus" title="Nova refeição" />
       </ListHeader>
       <FlatList
         data={mealsByDate}
