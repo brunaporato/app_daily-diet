@@ -6,7 +6,7 @@ import {
   NunitoSans_400Regular,
   NunitoSans_700Bold,
 } from '@expo-google-fonts/nunito-sans'
-import { NewMeal } from './src/screens/NewMeal'
+import { Success } from './src/screens/Success'
 import { ThemeProvider } from 'styled-components'
 import theme from './src/theme'
 
@@ -15,7 +15,7 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <StatusBar style="auto" />
-      {fontsLoaded ? <NewMeal /> : <Text>loading</Text>}
+      {fontsLoaded ? <Success /> : <Text>loading</Text>}
     </ThemeProvider>
   )
 }
