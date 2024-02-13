@@ -11,7 +11,7 @@ import ImageOutOfDiet from '../../assets/Illustration-OutOfDiet.png'
 import { Button } from '../../components/Button'
 
 export function Success() {
-  const isOnDiet = false
+  const isOnDiet = false // vai vir de route params
 
   return (
     <SuccessContainer>
