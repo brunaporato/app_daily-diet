@@ -15,7 +15,7 @@ import {
 } from './styles'
 import { Button } from '../../components/Button'
 
-export function Meal() {
+export function MealDetails() {
   const isOnDiet = false
 
   return (
