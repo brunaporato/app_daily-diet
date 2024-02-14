@@ -14,11 +14,15 @@ import { useState } from 'react'
 import { Select } from '../../components/Select'
 import { Button } from '../../components/Button'
 import { useNavigation } from '@react-navigation/native'
+import { MealProps, createMeal } from '../../storage/meal/createMeal'
 
 export function NewMeal() {
   const [formattedDate, setFormattedDate] = useState('')
   const [formattedTime, setFormattedTime] = useState('')
   const [isOnDiet, setIsOnDiet] = useState('')
+
+  const [name, SetName] = useState('')
+  const [description, setDescription] = useState('')
 
   const navigation = useNavigation()
 
@@ -61,8 +65,21 @@ export function NewMeal() {
     setIsOnDiet(type)
   }
 
-  function handleCreateMeal(isOnDiet: boolean) {
-    navigation.navigate('success', { onDiet: isOnDiet })
+  async function handleCreateMeal(onDiet: boolean) {
+    if (name && description && formattedDate && formattedTime && isOnDiet) {
+      const meal: MealProps = {
+        id: `${name}-${formattedDate}-${formattedTime}`,
+        name,
+        description,
+        date: formattedDate,
+        time: formattedTime,
+        onDiet: isOnDiet === 'positive',
+      }
+      await createMeal(meal)
+      return navigation.navigate('success', { onDiet })
+    }
+
+    console.log('erro') // Gerar erro: preencha todos os campos
   }
 
   function handleReturn() {
@@ -78,8 +95,14 @@ export function NewMeal() {
         <NewMealTitle>Nova refeição</NewMealTitle>
       </NewMealHeader>
       <NewMealContent>
-        <TextInput label="Nome" />
-        <TextInput label="Descrição" multiline style={{ height: 140 }} />
+        <TextInput label="Nome" onChangeText={SetName} value={name} />
+        <TextInput
+          label="Descrição"
+          multiline
+          style={{ height: 140 }}
+          onChangeText={setDescription}
+          value={description}
+        />
         <DateTimeContainer>
           <TextInput
             label="Data"

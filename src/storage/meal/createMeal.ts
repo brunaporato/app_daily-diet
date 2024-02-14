@@ -12,11 +12,7 @@ export interface MealProps {
   onDiet: boolean
 }
 
-interface CreateMealProps {
-  meal: MealProps
-}
-
-export async function createMeal({ meal }: CreateMealProps) {
+export async function createMeal(meal: MealProps) {
   try {
     const storedMeals = await getMeals()
 

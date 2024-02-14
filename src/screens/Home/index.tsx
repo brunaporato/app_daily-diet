@@ -12,66 +12,19 @@ import { FlatList, Image } from 'react-native'
 import LogoImg from '../../assets/Logo.png'
 import { Button } from '../../components/Button'
 import { ListDay } from '../../components/ListDay'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { TitleNumberSpan } from '../../components/NumberWithText'
 import { useNavigation } from '@react-navigation/native'
-
-export interface MealsType {
-  name: string
-  time: string
-  isOnDiet: boolean
-}
+import { getMeals } from '../../storage/meal/getMeals'
+import { MealProps } from '../../storage/meal/createMeal'
 
 interface MealsByDateType {
   date: string
-  meals: MealsType[]
+  meals: MealProps[]
 }
 
 export function Home() {
-  const [mealsByDate, setMealsByDate] = useState<MealsByDateType[]>([
-    {
-      date: '20.02.22',
-      meals: [
-        { name: 'X-Tudo', time: '20:00', isOnDiet: false },
-        {
-          name: 'Whey protein com leite',
-          time: '20:00',
-          isOnDiet: true,
-        },
-        {
-          name: 'Salada cesar com frango grelhado',
-          time: '20:00',
-          isOnDiet: true,
-        },
-        {
-          name: 'Vitamina de banana com abacate',
-          time: '20:00',
-          isOnDiet: true,
-        },
-      ],
-    },
-    {
-      date: '11.02.22',
-      meals: [
-        { name: 'X-Tudo', time: '20:00', isOnDiet: false },
-        {
-          name: 'Whey protein com leite',
-          time: '20:00',
-          isOnDiet: true,
-        },
-        {
-          name: 'Salada cesar com frango grelhado',
-          time: '20:00',
-          isOnDiet: true,
-        },
-        {
-          name: 'Vitamina de banana com abacate',
-          time: '20:00',
-          isOnDiet: true,
-        },
-      ],
-    },
-  ])
+  const [mealsByDate, setMealsByDate] = useState<MealsByDateType[]>()
 
   const percentOnDiet = 90 > 50
 
@@ -88,6 +41,45 @@ export function Home() {
   function handleMealDetails() {
     navigate('meal-details', { id: 'sei la' })
   }
+
+  async function fetchMeals() {
+    try {
+      const data = await getMeals()
+      const formattedData = data.map((meal) => ({
+        ...meal,
+        date: meal.date.split('/').join('.'),
+      }))
+
+      const mealsByDate = formattedData.reduce(
+        (acc: MealsByDateType[], meal: MealProps) => {
+          const existingDateIndex = acc.findIndex(
+            (item) => item.date === meal.date,
+          )
+          if (existingDateIndex !== -1) {
+            acc[existingDateIndex].meals.push(meal)
+          } else {
+            acc.push({ date: meal.date, meals: [meal] })
+          }
+          return acc
+        },
+        [],
+      )
+
+      mealsByDate.sort((a, b) => {
+        const dateA = new Date(a.date.split('.').reverse().join('-'))
+        const dateB = new Date(b.date.split('.').reverse().join('-'))
+        return dateB.getTime() - dateA.getTime()
+      })
+
+      setMealsByDate(mealsByDate)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    fetchMeals()
+  }, [mealsByDate])
 
   return (
     <HomeContainer>
