@@ -85,6 +85,10 @@ export function Home() {
     navigate('dashboard')
   }
 
+  function handleMealDetails() {
+    navigate('meal-details', { id: 'sei la' })
+  }
+
   return (
     <HomeContainer>
       <HeaderContainer>
@@ -105,7 +109,11 @@ export function Home() {
         data={mealsByDate}
         keyExtractor={(item) => `${item.date}-${item.meals}`}
         renderItem={({ item }) => (
-          <ListDay date={item.date} meals={item.meals} />
+          <ListDay
+            date={item.date}
+            meals={item.meals}
+            onPress={handleMealDetails}
+          />
         )}
       />
       {/* <BottomGradient

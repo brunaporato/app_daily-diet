@@ -1,3 +1,4 @@
+import { TouchableOpacityProps } from 'react-native'
 import {
   DietIndicator,
   Divider,
@@ -6,15 +7,20 @@ import {
   MealTime,
 } from './styles'
 
-interface ListMealProps {
+interface ListMealProps extends TouchableOpacityProps {
   isOnDiet?: boolean
   meal: string
   time: string
 }
 
-export function ListMeal({ meal, time, isOnDiet = false }: ListMealProps) {
+export function ListMeal({
+  meal,
+  time,
+  isOnDiet = false,
+  ...props
+}: ListMealProps) {
   return (
-    <ListMealContainer>
+    <ListMealContainer {...props}>
       <MealTime>{time}</MealTime>
       <Divider />
       <MealName>{meal}</MealName>

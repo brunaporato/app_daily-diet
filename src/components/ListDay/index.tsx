@@ -1,13 +1,14 @@
+import { TouchableOpacityProps } from 'react-native'
 import { MealsType } from '../../screens/Home'
 import { ListMeal } from '../ListMeal'
 import { ListDayContainer, ListDayTitle } from './styles'
 
-interface ListDayProps {
+interface ListDayProps extends TouchableOpacityProps {
   date: string
   meals: MealsType[]
 }
 
-export function ListDay({ date, meals }: ListDayProps) {
+export function ListDay({ date, meals, ...props }: ListDayProps) {
   return (
     <ListDayContainer>
       <ListDayTitle>{date}</ListDayTitle>
@@ -18,6 +19,7 @@ export function ListDay({ date, meals }: ListDayProps) {
             time={meal.time}
             meal={meal.name}
             isOnDiet={meal.isOnDiet}
+            {...props}
           />
         )
       })}

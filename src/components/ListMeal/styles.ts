@@ -4,7 +4,7 @@ interface DietIndicatorProps {
   isOnDiet: boolean
 }
 
-export const ListMealContainer = styled.View`
+export const ListMealContainer = styled.TouchableOpacity`
   padding: 14px 16px;
 
   border: 1px solid ${({ theme }) => theme.COLORS.GRAY_500};
