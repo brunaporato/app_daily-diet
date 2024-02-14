@@ -106,3 +106,33 @@ export const MealTagText = styled.Text`
 export const MealButtons = styled.View`
   gap: 9px;
 `
+
+export const ModalView = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.25);
+  padding: 24px;
+`
+
+export const ModalContainer = styled.View`
+  background-color: ${({ theme }) => theme.COLORS.GRAY_700};
+  padding: 40px 21px 24px 24px;
+  border-radius: 8px;
+  gap: 32px;
+`
+
+export const ModalText = styled.Text`
+  ${({ theme }) => css`
+    color: ${theme.COLORS.GRAY_200};
+    font-family: ${theme.FONT_FAMILY.BOLD};
+    font-size: ${theme.FONT_SIZE.LG};
+  `}
+
+  text-align: center;
+`
+
+export const ModalActions = styled.View`
+  flex-direction: row;
+  gap: 12px;
+`

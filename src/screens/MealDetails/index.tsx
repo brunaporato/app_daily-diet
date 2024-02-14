@@ -1,4 +1,4 @@
-import { TouchableOpacity, View } from 'react-native'
+import { Modal, TouchableOpacity, View } from 'react-native'
 import {
   MealButtons,
   MealContainer,
@@ -11,11 +11,17 @@ import {
   MealTagText,
   MealTitle,
   MealTitleSmall,
+  ModalActions,
+  ModalContainer,
+  ModalText,
+  ModalView,
   ReturnIcon,
 } from './styles'
 import { Button } from '../../components/Button'
+import { useState } from 'react'
 
 export function MealDetails() {
+  const [modalVisible, setModalVisible] = useState(false)
   const isOnDiet = false
 
   return (
@@ -43,8 +49,39 @@ export function MealDetails() {
         </View>
         <MealButtons>
           <Button title="Editar refeição" hasIcon="edit" />
-          <Button title="Excluir refeição" hasIcon="remove" type="secondary" />
+          <Button
+            title="Excluir refeição"
+            hasIcon="remove"
+            type="secondary"
+            onPress={() => setModalVisible(true)}
+          />
         </MealButtons>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible)
+          }}
+          onDismiss={() => {}}
+        >
+          <ModalView>
+            <ModalContainer>
+              <ModalText>
+                Deseja realmente excluir o registro da refeição?
+              </ModalText>
+              <ModalActions>
+                <Button
+                  title="Cancelar"
+                  type="secondary"
+                  style={{ flex: 1 }}
+                  onPress={() => setModalVisible(!modalVisible)}
+                />
+                <Button title="Sim, excluir" style={{ flex: 1 }} />
+              </ModalActions>
+            </ModalContainer>
+          </ModalView>
+        </Modal>
       </MealContent>
     </MealContainer>
   )
