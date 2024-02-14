@@ -13,11 +13,14 @@ import { TextInput } from '../../components/TextInput'
 import { useState } from 'react'
 import { Select } from '../../components/Select'
 import { Button } from '../../components/Button'
+import { useNavigation } from '@react-navigation/native'
 
 export function NewMeal() {
   const [formattedDate, setFormattedDate] = useState('')
   const [formattedTime, setFormattedTime] = useState('')
   const [isOnDiet, setIsOnDiet] = useState('')
+
+  const navigation = useNavigation()
 
   function handleDateChange(text: string) {
     const cleanedText = text.replace(/\D/g, '')
@@ -58,10 +61,18 @@ export function NewMeal() {
     setIsOnDiet(type)
   }
 
+  function handleCreateMeal(isOnDiet: boolean) {
+    navigation.navigate('success', { onDiet: isOnDiet })
+  }
+
+  function handleReturn() {
+    navigation.navigate('home')
+  }
+
   return (
     <NewMealContainer>
       <NewMealHeader>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleReturn}>
           <ReturnIcon />
         </TouchableOpacity>
         <NewMealTitle>Nova refeição</NewMealTitle>
@@ -100,7 +111,10 @@ export function NewMeal() {
             onPress={() => toggleIsOnDiet('negative')}
           />
         </SelectOnDiet>
-        <Button title="Cadastrar refeição" />
+        <Button
+          title="Cadastrar refeição"
+          onPress={() => handleCreateMeal(isOnDiet === 'positive')}
+        />
       </NewMealContent>
     </NewMealContainer>
   )

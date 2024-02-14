@@ -19,15 +19,26 @@ import {
 } from './styles'
 import { Button } from '../../components/Button'
 import { useState } from 'react'
+import { useNavigation } from '@react-navigation/native'
 
 export function MealDetails() {
   const [modalVisible, setModalVisible] = useState(false)
   const isOnDiet = false
 
+  const navigation = useNavigation()
+
+  function handleReturn() {
+    navigation.navigate('home')
+  }
+
+  function handleEditMeal(id: string) {
+    navigation.navigate('edit-meal', { id })
+  }
+
   return (
     <MealContainer isOnDiet={isOnDiet}>
       <MealHeader>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleReturn}>
           <ReturnIcon />
         </TouchableOpacity>
         <MealScreenTitle>Refeição</MealScreenTitle>
@@ -48,7 +59,11 @@ export function MealDetails() {
           </MealTagContainer>
         </View>
         <MealButtons>
-          <Button title="Editar refeição" hasIcon="edit" />
+          <Button
+            title="Editar refeição"
+            hasIcon="edit"
+            onPress={() => handleEditMeal('id')}
+          />
           <Button
             title="Excluir refeição"
             hasIcon="remove"

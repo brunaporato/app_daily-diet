@@ -9,17 +9,29 @@ import {
 import ImageOnDiet from '../../assets/Illustration-OnDiet.png'
 import ImageOutOfDiet from '../../assets/Illustration-OutOfDiet.png'
 import { Button } from '../../components/Button'
+import { useNavigation, useRoute } from '@react-navigation/native'
+
+interface RouteParams {
+  onDiet: boolean
+}
 
 export function Success() {
-  const isOnDiet = false // vai vir de route params
+  const navigation = useNavigation()
+
+  const route = useRoute()
+  const { onDiet } = route.params as RouteParams
+
+  function handleHomeScreen() {
+    navigation.navigate('home')
+  }
 
   return (
     <SuccessContainer>
-      <SuccessTitle isOnDiet={isOnDiet}>
-        {isOnDiet ? 'Continue assim!' : 'Que pena!'}
+      <SuccessTitle isOnDiet={onDiet}>
+        {onDiet ? 'Continue assim!' : 'Que pena!'}
       </SuccessTitle>
       <SuccessSubtitle>
-        {isOnDiet ? (
+        {onDiet ? (
           <>
             Você continua{' '}
             <SuccessSubtitleStrong>dentro da dieta</SuccessSubtitleStrong>.
@@ -32,8 +44,8 @@ export function Success() {
           </>
         )}
       </SuccessSubtitle>
-      <SuccessImage source={isOnDiet ? ImageOnDiet : ImageOutOfDiet} />
-      <Button title="Ir para página inicial" />
+      <SuccessImage source={onDiet ? ImageOnDiet : ImageOutOfDiet} />
+      <Button title="Ir para página inicial" onPress={handleHomeScreen} />
     </SuccessContainer>
   )
 }

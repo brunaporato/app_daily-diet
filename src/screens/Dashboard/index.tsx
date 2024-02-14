@@ -8,12 +8,19 @@ import {
   ReturnIcon,
 } from './styles'
 import { TitleNumberSpan } from '../../components/NumberWithText'
+import { useNavigation } from '@react-navigation/native'
 
 export function Dashboard() {
+  const navigation = useNavigation()
+
+  function handleReturn() {
+    navigation.navigate('home')
+  }
+
   return (
     <>
       <DashboardContainer isOnDiet={true}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleReturn}>
           <ReturnIcon isOnDiet={true} />
         </TouchableOpacity>
         <TitleNumberSpan title="90,86%" span="das refeições dentro da dieta" />

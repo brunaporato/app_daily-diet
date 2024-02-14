@@ -13,11 +13,20 @@ import {
   SelectOnDiet,
 } from './styles'
 import { TouchableOpacity } from 'react-native'
+import { useNavigation, useRoute } from '@react-navigation/native'
+
+interface RouteParams {
+  id: string
+}
 
 export function EditMeal() {
   const [formattedDate, setFormattedDate] = useState('12/08/2022')
   const [formattedTime, setFormattedTime] = useState('16:00')
   const [isOnDiet, setIsOnDiet] = useState('negative')
+
+  const navigation = useNavigation()
+  const route = useRoute()
+  const { id } = route.params as RouteParams
 
   function handleDateChange(text: string) {
     const cleanedText = text.replace(/\D/g, '')
@@ -58,10 +67,18 @@ export function EditMeal() {
     setIsOnDiet(type)
   }
 
+  function handleReturn() {
+    navigation.navigate('meal-details', { id })
+  }
+
+  function handleEditMealSuccess(onDiet: boolean) {
+    navigation.navigate('success', { onDiet })
+  }
+
   return (
     <EditMealContainer>
       <EditMealHeader>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleReturn}>
           <ReturnIcon />
         </TouchableOpacity>
         <EditMealTitle>Editar refeição</EditMealTitle>
@@ -105,7 +122,10 @@ export function EditMeal() {
             onPress={() => toggleIsOnDiet('negative')}
           />
         </SelectOnDiet>
-        <Button title="Salvar alterações" />
+        <Button
+          title="Salvar alterações"
+          onPress={() => handleEditMealSuccess(isOnDiet === 'positive')}
+        />
       </EditMealContent>
     </EditMealContainer>
   )
