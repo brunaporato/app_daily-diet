@@ -6,16 +6,16 @@ import {
   NunitoSans_400Regular,
   NunitoSans_700Bold,
 } from '@expo-google-fonts/nunito-sans'
-import { MealDetails } from './src/screens/MealDetails'
 import { ThemeProvider } from 'styled-components'
 import theme from './src/theme'
+import { Routes } from './src/routes'
 
 export default function App() {
   const [fontsLoaded] = useFonts({ NunitoSans_400Regular, NunitoSans_700Bold })
   return (
     <ThemeProvider theme={theme}>
       <StatusBar style="auto" />
-      {fontsLoaded ? <MealDetails /> : <Text>loading</Text>}
+      {fontsLoaded ? <Routes /> : <Text>loading</Text>}
     </ThemeProvider>
   )
 }

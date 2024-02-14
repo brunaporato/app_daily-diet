@@ -14,6 +14,7 @@ import { Button } from '../../components/Button'
 import { ListDay } from '../../components/ListDay'
 import { useState } from 'react'
 import { TitleNumberSpan } from '../../components/NumberWithText'
+import { useNavigation } from '@react-navigation/native'
 
 export interface MealsType {
   name: string
@@ -74,6 +75,16 @@ export function Home() {
 
   const percentOnDiet = 90 > 50
 
+  const { navigate } = useNavigation()
+
+  function handleNewMeal() {
+    navigate('new-meal')
+  }
+
+  function handleDashboard() {
+    navigate('dashboard')
+  }
+
   return (
     <HomeContainer>
       <HeaderContainer>
@@ -81,14 +92,14 @@ export function Home() {
         <Avatar src="https://github.com/brunaporato.png" />
       </HeaderContainer>
       <PercentCard type={percentOnDiet ? 'green' : 'red'}>
-        <TouchableIcon>
+        <TouchableIcon onPress={handleDashboard}>
           <PercentLinkIcon type={percentOnDiet ? 'green' : 'red'} />
         </TouchableIcon>
         <TitleNumberSpan title="90,86%" span="das refeições dentro da dieta" />
       </PercentCard>
       <ListHeader>
         <HomeText>Refeições</HomeText>
-        <Button hasIcon="plus" title="Nova refeição" />
+        <Button hasIcon="plus" title="Nova refeição" onPress={handleNewMeal} />
       </ListHeader>
       <FlatList
         data={mealsByDate}
