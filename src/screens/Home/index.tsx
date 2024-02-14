@@ -38,10 +38,6 @@ export function Home() {
     navigate('dashboard')
   }
 
-  function handleMealDetails() {
-    navigate('meal-details', { id: 'sei la' })
-  }
-
   async function fetchMeals() {
     try {
       const data = await getMeals()
@@ -101,11 +97,7 @@ export function Home() {
         data={mealsByDate}
         keyExtractor={(item) => `${item.date}-${item.meals}`}
         renderItem={({ item }) => (
-          <ListDay
-            date={item.date}
-            meals={item.meals}
-            onPress={handleMealDetails}
-          />
+          <ListDay date={item.date} meals={item.meals} />
         )}
       />
       {/* <BottomGradient
