@@ -20,8 +20,8 @@ import {
 import { Button } from '../../components/Button'
 import { useEffect, useState } from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import { getMeals } from '../../storage/meal/getMeals'
 import { MealProps } from '../../storage/meal/createMeal'
+import { getMealById } from '../../storage/meal/getMealById'
 
 interface RouteParams {
   id: string
@@ -35,13 +35,6 @@ export function MealDetails() {
   const route = useRoute()
   const { id } = route.params as RouteParams
 
-  async function fetchMeals(id: string) {
-    const meals = await getMeals()
-
-    const meal = meals.find((meal) => meal.id === id)
-    setMeal(meal)
-  }
-
   function handleReturn() {
     navigation.navigate('home')
   }
@@ -51,7 +44,12 @@ export function MealDetails() {
   }
 
   useEffect(() => {
-    fetchMeals(id)
+    async function fetchMeal() {
+      const meal = await getMealById(id)
+      setMeal(meal)
+    }
+
+    fetchMeal()
   }, [id])
 
   return (
@@ -83,7 +81,7 @@ export function MealDetails() {
               <Button
                 title="Editar refeição"
                 hasIcon="edit"
-                onPress={() => handleEditMeal('id')}
+                onPress={() => handleEditMeal(id)}
               />
               <Button
                 title="Excluir refeição"
