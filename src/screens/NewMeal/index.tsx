@@ -1,4 +1,4 @@
-import { TouchableOpacity } from 'react-native'
+import { Alert, TouchableOpacity } from 'react-native'
 import {
   DateTimeContainer,
   Label,
@@ -15,6 +15,7 @@ import { Select } from '../../components/Select'
 import { Button } from '../../components/Button'
 import { useNavigation } from '@react-navigation/native'
 import { MealProps, createMeal } from '../../storage/meal/createMeal'
+import { AppError } from '../../utils/AppError'
 
 export function NewMeal() {
   const [formattedDate, setFormattedDate] = useState('')
@@ -51,7 +52,7 @@ export function NewMeal() {
         hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59
 
       if (isValidTime) {
-        const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
+        const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0').padEnd(2, '0')}`
         setFormattedTime(formattedTime)
       } else {
         setFormattedTime('')
@@ -66,7 +67,20 @@ export function NewMeal() {
   }
 
   async function handleCreateMeal(onDiet: boolean) {
-    if (name && description && formattedDate && formattedTime && isOnDiet) {
+    try {
+      if (
+        name.trim().length === 0 ||
+        description.trim().length === 0 ||
+        formattedDate.length === 0 ||
+        formattedTime.length === 0 ||
+        isOnDiet.length === 0
+      ) {
+        return Alert.alert(
+          'Erro',
+          'Você precisa digitar todos os dados para cadastrar uma nova refeição.',
+        )
+      }
+
       const meal: MealProps = {
         id: `${name}-${formattedDate}-${formattedTime}`,
         name,
@@ -77,9 +91,17 @@ export function NewMeal() {
       }
       await createMeal(meal)
       return navigation.navigate('success', { onDiet })
+    } catch (error) {
+      if (error instanceof AppError) {
+        Alert.alert('Nova refeição', error.message)
+      } else {
+        Alert.alert(
+          'Nova refeição',
+          'Não foi possível criar a refeição, tente novamente.',
+        )
+        console.log(error)
+      }
     }
-
-    console.log('erro') // Gerar erro: preencha todos os campos
   }
 
   function handleReturn() {
