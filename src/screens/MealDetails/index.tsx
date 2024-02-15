@@ -22,6 +22,7 @@ import { useEffect, useState } from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { MealProps } from '../../storage/meal/createMeal'
 import { getMealById } from '../../storage/meal/getMealById'
+import { deleteMeal } from '../../storage/meal/deleteMeal'
 
 interface RouteParams {
   id: string
@@ -41,6 +42,12 @@ export function MealDetails() {
 
   function handleEditMeal(id: string) {
     navigation.navigate('edit-meal', { id })
+  }
+
+  async function handleDeleteMeal(id: string) {
+    await deleteMeal(id)
+    setModalVisible(!modalVisible)
+    navigation.navigate('home')
   }
 
   useEffect(() => {
@@ -111,7 +118,11 @@ export function MealDetails() {
                       style={{ flex: 1 }}
                       onPress={() => setModalVisible(!modalVisible)}
                     />
-                    <Button title="Sim, excluir" style={{ flex: 1 }} />
+                    <Button
+                      title="Sim, excluir"
+                      style={{ flex: 1 }}
+                      onPress={() => handleDeleteMeal(id)}
+                    />
                   </ModalActions>
                 </ModalContainer>
               </ModalView>
