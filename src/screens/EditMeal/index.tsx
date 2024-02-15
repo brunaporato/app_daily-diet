@@ -86,10 +86,10 @@ export function EditMeal() {
     if (editMealInfo !== undefined) {
       newMeal = {
         id,
-        date: formattedDate || editMealInfo.date,
-        time: formattedTime || editMealInfo.time,
-        name: mealName || editMealInfo.name,
-        description: mealDescription || editMealInfo.description,
+        date: formattedDate,
+        time: formattedTime,
+        name: mealName,
+        description: mealDescription,
         onDiet: isOnDiet === 'positive',
       }
       await createMeal(newMeal)
@@ -102,13 +102,23 @@ export function EditMeal() {
       const editMeal = await getMealById(id)
 
       setEditMealInfo(editMeal)
-
-      const isOnDiet = editMeal?.onDiet ? 'positive' : 'negative'
-      setIsOnDiet(isOnDiet)
     }
 
     fetchMeal()
   }, [id])
+
+  useEffect(() => {
+    function setData() {
+      if (editMealInfo) {
+        setIsOnDiet(editMealInfo.onDiet ? 'positive' : 'negative')
+        setMealName(editMealInfo.name)
+        setMealDescription(editMealInfo.description)
+        setFormattedDate(editMealInfo.date)
+        setFormattedTime(editMealInfo.time)
+      }
+    }
+    setData()
+  }, [editMealInfo])
 
   return (
     <>
@@ -123,14 +133,14 @@ export function EditMeal() {
           <EditMealContent>
             <TextInput
               label="Nome"
-              value={mealName || editMealInfo.name}
+              value={mealName}
               onChangeText={setMealName}
             />
             <TextInput
               label="Descrição"
               multiline
               style={{ height: 140 }}
-              value={mealDescription || editMealInfo.description}
+              value={mealDescription}
               onChangeText={setMealDescription}
             />
             <DateTimeContainer>
@@ -140,7 +150,7 @@ export function EditMeal() {
                 keyboardType="number-pad"
                 placeholder="DD/MM/AA"
                 onChangeText={(text) => handleDateChange(text)}
-                value={formattedDate || editMealInfo.date}
+                value={formattedDate}
               />
               <TextInput
                 label="Hora"
@@ -148,7 +158,7 @@ export function EditMeal() {
                 keyboardType="number-pad"
                 placeholder="HH:MM"
                 onChangeText={(text) => handleTimeChange(text)}
-                value={formattedTime || editMealInfo.time}
+                value={formattedTime}
               />
             </DateTimeContainer>
             <Label>Está dentro da dieta?</Label>
