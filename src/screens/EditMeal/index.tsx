@@ -14,8 +14,9 @@ import {
 } from './styles'
 import { Text, TouchableOpacity } from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import { MealProps } from '../../storage/meal/createMeal'
+import { MealProps, createMeal } from '../../storage/meal/createMeal'
 import { getMealById } from '../../storage/meal/getMealById'
+import { deleteMeal } from '../../storage/meal/deleteMeal'
 
 interface RouteParams {
   id: string
@@ -25,6 +26,10 @@ export function EditMeal() {
   const [formattedDate, setFormattedDate] = useState('')
   const [formattedTime, setFormattedTime] = useState('')
   const [isOnDiet, setIsOnDiet] = useState('')
+
+  const [mealName, setMealName] = useState('')
+  const [mealDescription, setMealDescription] = useState('')
+
   const [editMealInfo, setEditMealInfo] = useState<MealProps>()
 
   const navigation = useNavigation()
@@ -74,14 +79,32 @@ export function EditMeal() {
     navigation.navigate('meal-details', { id })
   }
 
-  function handleEditMealSuccess(onDiet: boolean) {
-    navigation.navigate('success', { onDiet })
+  async function handleEditMealSuccess() {
+    await deleteMeal(id)
+    let newMeal: MealProps
+
+    if (editMealInfo !== undefined) {
+      newMeal = {
+        id,
+        date: formattedDate || editMealInfo.date,
+        time: formattedTime || editMealInfo.time,
+        name: mealName || editMealInfo.name,
+        description: mealDescription || editMealInfo.description,
+        onDiet: isOnDiet === 'positive',
+      }
+      await createMeal(newMeal)
+      navigation.navigate('success', { onDiet: newMeal.onDiet })
+    }
   }
 
   useEffect(() => {
     async function fetchMeal() {
       const editMeal = await getMealById(id)
+
       setEditMealInfo(editMeal)
+
+      const isOnDiet = editMeal?.onDiet ? 'positive' : 'negative'
+      setIsOnDiet(isOnDiet)
     }
 
     fetchMeal()
@@ -98,12 +121,17 @@ export function EditMeal() {
             <EditMealTitle>Editar refeição</EditMealTitle>
           </EditMealHeader>
           <EditMealContent>
-            <TextInput label="Nome" value={editMealInfo.name} />
+            <TextInput
+              label="Nome"
+              value={mealName || editMealInfo.name}
+              onChangeText={setMealName}
+            />
             <TextInput
               label="Descrição"
               multiline
               style={{ height: 140 }}
-              value={editMealInfo.description}
+              value={mealDescription || editMealInfo.description}
+              onChangeText={setMealDescription}
             />
             <DateTimeContainer>
               <TextInput
@@ -112,7 +140,7 @@ export function EditMeal() {
                 keyboardType="number-pad"
                 placeholder="DD/MM/AA"
                 onChangeText={(text) => handleDateChange(text)}
-                value={editMealInfo.date}
+                value={formattedDate || editMealInfo.date}
               />
               <TextInput
                 label="Hora"
@@ -120,26 +148,23 @@ export function EditMeal() {
                 keyboardType="number-pad"
                 placeholder="HH:MM"
                 onChangeText={(text) => handleTimeChange(text)}
-                value={editMealInfo.time}
+                value={formattedTime || editMealInfo.time}
               />
             </DateTimeContainer>
             <Label>Está dentro da dieta?</Label>
             <SelectOnDiet>
               <Select
                 type="positive"
-                isActive={editMealInfo.onDiet}
+                isActive={isOnDiet === 'positive'}
                 onPress={() => toggleIsOnDiet('positive')}
               />
               <Select
                 type="negative"
-                isActive={!editMealInfo.onDiet}
+                isActive={isOnDiet === 'negative'}
                 onPress={() => toggleIsOnDiet('negative')}
               />
             </SelectOnDiet>
-            <Button
-              title="Salvar alterações"
-              onPress={() => handleEditMealSuccess(isOnDiet === 'positive')}
-            />
+            <Button title="Salvar alterações" onPress={handleEditMealSuccess} />
           </EditMealContent>
         </EditMealContainer>
       ) : (
