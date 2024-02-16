@@ -8,7 +8,7 @@ import {
   PercentLinkIcon,
   TouchableIcon,
 } from './styles'
-import { FlatList, Image } from 'react-native'
+import { FlatList, Image, Text } from 'react-native'
 import LogoImg from '../../assets/Logo.png'
 import { Button } from '../../components/Button'
 import { ListDay } from '../../components/ListDay'
@@ -17,6 +17,7 @@ import { TitleNumberSpan } from '../../components/NumberWithText'
 import { useNavigation } from '@react-navigation/native'
 import { getMeals } from '../../storage/meal/getMeals'
 import { MealProps } from '../../storage/meal/createMeal'
+import { getMealsData } from '../../storage/meal/getMealsData'
 
 interface MealsByDateType {
   date: string
@@ -25,8 +26,9 @@ interface MealsByDateType {
 
 export function Home() {
   const [mealsByDate, setMealsByDate] = useState<MealsByDateType[]>()
+  const [percentOfDiet, setPercentOfDiet] = useState(0)
 
-  const percentOnDiet = 90 > 50
+  const isHealthy = percentOfDiet > 50
 
   const { navigate } = useNavigation()
 
@@ -67,7 +69,10 @@ export function Home() {
         return dateB.getTime() - dateA.getTime()
       })
 
+      const { percentOfMealsOnDiet } = await getMealsData()
+
       setMealsByDate(mealsByDate)
+      setPercentOfDiet(percentOfMealsOnDiet)
     } catch (error) {
       console.log(error)
     }
@@ -78,33 +83,46 @@ export function Home() {
   }, [mealsByDate])
 
   return (
-    <HomeContainer>
-      <HeaderContainer>
-        <Image source={LogoImg} alt="Daily Diet's logo" />
-        <Avatar src="https://github.com/brunaporato.png" />
-      </HeaderContainer>
-      <PercentCard type={percentOnDiet ? 'green' : 'red'}>
-        <TouchableIcon onPress={handleDashboard}>
-          <PercentLinkIcon type={percentOnDiet ? 'green' : 'red'} />
-        </TouchableIcon>
-        <TitleNumberSpan title="90,86%" span="das refeições dentro da dieta" />
-      </PercentCard>
-      <ListHeader>
-        <HomeText>Refeições</HomeText>
-        <Button hasIcon="plus" title="Nova refeição" onPress={handleNewMeal} />
-      </ListHeader>
-      <FlatList
-        data={mealsByDate}
-        keyExtractor={(item) => `${item.date}-${item.meals}`}
-        renderItem={({ item }) => (
-          <ListDay date={item.date} meals={item.meals} />
-        )}
-      />
-      {/* <BottomGradient
-        colors={['#FAFAFA', 'rgba(250, 250, 250, 0.00)']}
-        start={{ x: 0.5, y: 0.7 }}
-        locations={[0.5, 1]}
-      /> */}
-    </HomeContainer>
+    <>
+      {mealsByDate && percentOfDiet ? (
+        <HomeContainer>
+          <HeaderContainer>
+            <Image source={LogoImg} alt="Daily Diet's logo" />
+            <Avatar src="https://github.com/brunaporato.png" />
+          </HeaderContainer>
+          <PercentCard type={isHealthy ? 'green' : 'red'}>
+            <TouchableIcon onPress={handleDashboard}>
+              <PercentLinkIcon type={isHealthy ? 'green' : 'red'} />
+            </TouchableIcon>
+            <TitleNumberSpan
+              title={`${percentOfDiet}%`}
+              span="das refeições dentro da dieta"
+            />
+          </PercentCard>
+          <ListHeader>
+            <HomeText>Refeições</HomeText>
+            <Button
+              hasIcon="plus"
+              title="Nova refeição"
+              onPress={handleNewMeal}
+            />
+          </ListHeader>
+          <FlatList
+            data={mealsByDate}
+            keyExtractor={(item) => `${item.date}-${item.meals}`}
+            renderItem={({ item }) => (
+              <ListDay date={item.date} meals={item.meals} />
+            )}
+          />
+          {/* <BottomGradient
+          colors={['#FAFAFA', 'rgba(250, 250, 250, 0.00)']}
+          start={{ x: 0.5, y: 0.7 }}
+          locations={[0.5, 1]}
+        /> */}
+        </HomeContainer>
+      ) : (
+        <Text>loading</Text>
+      )}
+    </>
   )
 }
