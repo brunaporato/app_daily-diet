@@ -12,11 +12,12 @@ import {
   ReturnIcon,
   SelectOnDiet,
 } from './styles'
-import { Text, TouchableOpacity } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { MealProps, createMeal } from '../../storage/meal/createMeal'
 import { getMealById } from '../../storage/meal/getMealById'
 import { deleteMeal } from '../../storage/meal/deleteMeal'
+import { Loading } from '../../components/Loading'
 
 interface RouteParams {
   id: string
@@ -178,7 +179,7 @@ export function EditMeal() {
           </EditMealContent>
         </EditMealContainer>
       ) : (
-        <Text>loading</Text>
+        <Loading />
       )}
     </>
   )

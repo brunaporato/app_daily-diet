@@ -8,7 +8,7 @@ import {
   PercentLinkIcon,
   TouchableIcon,
 } from './styles'
-import { FlatList, Image, Text } from 'react-native'
+import { FlatList, Image } from 'react-native'
 import LogoImg from '../../assets/Logo.png'
 import { Button } from '../../components/Button'
 import { ListDay } from '../../components/ListDay'
@@ -18,6 +18,7 @@ import { useNavigation } from '@react-navigation/native'
 import { getMeals } from '../../storage/meal/getMeals'
 import { MealProps } from '../../storage/meal/createMeal'
 import { getMealsData } from '../../storage/meal/getMealsData'
+import { Loading } from '../../components/Loading'
 
 interface MealsByDateType {
   date: string
@@ -43,12 +44,12 @@ export function Home() {
   async function fetchMeals() {
     try {
       const data = await getMeals()
-      const formattedData = data.map((meal) => ({
+      const formattedData: MealProps[] = data.map((meal) => ({
         ...meal,
         date: meal.date.split('/').join('.'),
       }))
 
-      const mealsByDate = formattedData.reduce(
+      const mealsByDateData = formattedData.reduce(
         (acc: MealsByDateType[], meal: MealProps) => {
           const existingDateIndex = acc.findIndex(
             (item) => item.date === meal.date,
@@ -63,7 +64,7 @@ export function Home() {
         [],
       )
 
-      mealsByDate.sort((a, b) => {
+      mealsByDateData.sort((a, b) => {
         const dateA = new Date(a.date.split('.').reverse().join('-'))
         const dateB = new Date(b.date.split('.').reverse().join('-'))
         return dateB.getTime() - dateA.getTime()
@@ -71,8 +72,8 @@ export function Home() {
 
       const { percentOfMealsOnDiet } = await getMealsData()
 
-      setMealsByDate(mealsByDate)
-      setPercentOfDiet(percentOfMealsOnDiet)
+      setMealsByDate(mealsByDateData)
+      setPercentOfDiet(percentOfMealsOnDiet || 100)
     } catch (error) {
       console.log(error)
     }
@@ -84,7 +85,7 @@ export function Home() {
 
   return (
     <>
-      {mealsByDate && percentOfDiet ? (
+      {percentOfDiet !== 0 ? (
         <HomeContainer>
           <HeaderContainer>
             <Image source={LogoImg} alt="Daily Diet's logo" />
@@ -121,7 +122,7 @@ export function Home() {
         /> */}
         </HomeContainer>
       ) : (
-        <Text>loading</Text>
+        <Loading />
       )}
     </>
   )

@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Alert, TouchableOpacity, View } from 'react-native'
 import {
   DashboarContentTitle,
   DashboardCard,
@@ -11,10 +11,12 @@ import { TitleNumberSpan } from '../../components/NumberWithText'
 import { useNavigation } from '@react-navigation/native'
 import { MealsDataProps, getMealsData } from '../../storage/meal/getMealsData'
 import { useEffect, useState } from 'react'
+import { Loading } from '../../components/Loading'
 
 export function Dashboard() {
   const [mealsData, setMealsData] = useState<MealsDataProps>()
   const [isHealthy, setIsHealthy] = useState(true)
+  const [isDataLoaded, setIsDataLoaded] = useState(false)
   const navigation = useNavigation()
 
   function handleReturn() {
@@ -22,10 +24,16 @@ export function Dashboard() {
   }
 
   async function fetchData() {
-    const data = await getMealsData()
-    setMealsData(data)
+    try {
+      const data = await getMealsData()
+      setMealsData(data)
 
-    setIsHealthy(data.percentOfMealsOnDiet >= 50)
+      setIsHealthy(data.percentOfMealsOnDiet >= 50)
+      setIsDataLoaded(true)
+    } catch (error) {
+      Alert.alert('Erro', 'Não foi possível carregar os dados, tente novamente')
+      console.log(error)
+    }
   }
 
   useEffect(() => {
@@ -34,14 +42,14 @@ export function Dashboard() {
 
   return (
     <>
-      {mealsData ? (
+      {isDataLoaded ? (
         <>
           <DashboardContainer isOnDiet={isHealthy}>
             <TouchableOpacity onPress={handleReturn}>
               <ReturnIcon isOnDiet={isHealthy} />
             </TouchableOpacity>
             <TitleNumberSpan
-              title={`${mealsData.percentOfMealsOnDiet}%`}
+              title={`${mealsData?.percentOfMealsOnDiet}%`}
               span="das refeições dentro da dieta"
             />
           </DashboardContainer>
@@ -49,26 +57,26 @@ export function Dashboard() {
             <DashboarContentTitle>Estatísticas Gerais</DashboarContentTitle>
             <DashboardCard>
               <TitleNumberSpan
-                title={String(mealsData.bestSeriesOnDiet)}
+                title={String(mealsData?.bestSeriesOnDiet)}
                 span="melhor sequência de pratos dentro da dieta"
               />
             </DashboardCard>
             <DashboardCard>
               <TitleNumberSpan
-                title={String(mealsData.totalMealsStored)}
+                title={String(mealsData?.totalMealsStored)}
                 span="refeições registradas"
               />
             </DashboardCard>
             <View style={{ flexDirection: 'row', gap: 12 }}>
               <DashboardCardSmall isOnDiet={true}>
                 <TitleNumberSpan
-                  title={String(mealsData.mealsOnDiet)}
+                  title={String(mealsData?.mealsOnDiet)}
                   span="refeições dentro da dieta"
                 />
               </DashboardCardSmall>
               <DashboardCardSmall isOnDiet={false}>
                 <TitleNumberSpan
-                  title={String(mealsData.mealsOutOfDiet)}
+                  title={String(mealsData?.mealsOutOfDiet)}
                   span="refeições fora da dieta"
                 />
               </DashboardCardSmall>
@@ -76,7 +84,7 @@ export function Dashboard() {
           </DashboardContent>
         </>
       ) : (
-        <Text>loading</Text>
+        <Loading />
       )}
     </>
   )

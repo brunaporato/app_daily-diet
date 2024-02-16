@@ -1,4 +1,4 @@
-import { Modal, Text, TouchableOpacity, View } from 'react-native'
+import { Modal, TouchableOpacity, View } from 'react-native'
 import {
   MealButtons,
   MealContainer,
@@ -23,6 +23,7 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import { MealProps } from '../../storage/meal/createMeal'
 import { getMealById } from '../../storage/meal/getMealById'
 import { deleteMeal } from '../../storage/meal/deleteMeal'
+import { Loading } from '../../components/Loading'
 
 interface RouteParams {
   id: string
@@ -52,8 +53,8 @@ export function MealDetails() {
 
   useEffect(() => {
     async function fetchMeal() {
-      const meal = await getMealById(id)
-      setMeal(meal)
+      const mealData = await getMealById(id)
+      setMeal(mealData)
     }
 
     fetchMeal()
@@ -130,7 +131,7 @@ export function MealDetails() {
           </MealContent>
         </MealContainer>
       ) : (
-        <Text>loading</Text>
+        <Loading />
       )}
     </>
   )
