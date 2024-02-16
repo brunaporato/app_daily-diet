@@ -1,4 +1,11 @@
-import { Alert, TouchableOpacity } from 'react-native'
+import {
+  Alert,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native'
 import {
   DateTimeContainer,
   Label,
@@ -109,58 +116,76 @@ export function NewMeal() {
   }
 
   return (
-    <NewMealContainer>
-      <NewMealHeader>
-        <TouchableOpacity onPress={handleReturn}>
-          <ReturnIcon />
-        </TouchableOpacity>
-        <NewMealTitle>Nova refeição</NewMealTitle>
-      </NewMealHeader>
-      <NewMealContent>
-        <TextInput label="Nome" onChangeText={SetName} value={name} />
-        <TextInput
-          label="Descrição"
-          multiline
-          style={{ height: 140 }}
-          onChangeText={setDescription}
-          value={description}
-        />
-        <DateTimeContainer>
-          <TextInput
-            label="Data"
-            parentStyle={{ flex: 1 }}
-            keyboardType="number-pad"
-            placeholder="DD/MM/AA"
-            onChangeText={(text) => handleDateChange(text)}
-            value={formattedDate}
-          />
-          <TextInput
-            label="Hora"
-            parentStyle={{ flex: 1 }}
-            keyboardType="number-pad"
-            placeholder="HH:MM"
-            onChangeText={(text) => handleTimeChange(text)}
-            value={formattedTime}
-          />
-        </DateTimeContainer>
-        <Label>Está dentro da dieta?</Label>
-        <SelectOnDiet>
-          <Select
-            type="positive"
-            isActive={isOnDiet === 'positive'}
-            onPress={() => toggleIsOnDiet('positive')}
-          />
-          <Select
-            type="negative"
-            isActive={isOnDiet === 'negative'}
-            onPress={() => toggleIsOnDiet('negative')}
-          />
-        </SelectOnDiet>
-        <Button
-          title="Cadastrar refeição"
-          onPress={() => handleCreateMeal(isOnDiet === 'positive')}
-        />
-      </NewMealContent>
-    </NewMealContainer>
+    <KeyboardAvoidingView
+      enabled={Platform.OS === 'ios'}
+      behavior="padding"
+      style={{ flex: 1 }}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <NewMealContainer>
+          <NewMealHeader>
+            <TouchableOpacity onPress={handleReturn}>
+              <ReturnIcon />
+            </TouchableOpacity>
+            <NewMealTitle>Nova refeição</NewMealTitle>
+          </NewMealHeader>
+          <NewMealContent>
+            <TextInput
+              label="Nome"
+              onChangeText={SetName}
+              value={name}
+              returnKeyType="next"
+            />
+            <TextInput
+              label="Descrição"
+              multiline
+              style={{ height: 140 }}
+              onChangeText={setDescription}
+              value={description}
+              returnKeyType="next"
+              returnKeyLabel="next"
+              blurOnSubmit={true}
+              onSubmitEditing={() => Keyboard.dismiss()}
+            />
+            <DateTimeContainer>
+              <TextInput
+                label="Data"
+                parentStyle={{ flex: 1 }}
+                keyboardType="number-pad"
+                placeholder="DD/MM/AA"
+                onChangeText={(text) => handleDateChange(text)}
+                value={formattedDate}
+              />
+              <TextInput
+                label="Hora"
+                parentStyle={{ flex: 1 }}
+                keyboardType="number-pad"
+                placeholder="HH:MM"
+                onChangeText={(text) => handleTimeChange(text)}
+                value={formattedTime}
+                returnKeyLabel="done"
+              />
+            </DateTimeContainer>
+            <Label>Está dentro da dieta?</Label>
+            <SelectOnDiet>
+              <Select
+                type="positive"
+                isActive={isOnDiet === 'positive'}
+                onPress={() => toggleIsOnDiet('positive')}
+              />
+              <Select
+                type="negative"
+                isActive={isOnDiet === 'negative'}
+                onPress={() => toggleIsOnDiet('negative')}
+              />
+            </SelectOnDiet>
+            <Button
+              title="Cadastrar refeição"
+              onPress={() => handleCreateMeal(isOnDiet === 'positive')}
+            />
+          </NewMealContent>
+        </NewMealContainer>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   )
 }

@@ -12,7 +12,14 @@ import {
   ReturnIcon,
   SelectOnDiet,
 } from './styles'
-import { TouchableOpacity } from 'react-native'
+import {
+  Alert,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { MealProps, createMeal } from '../../storage/meal/createMeal'
 import { getMealById } from '../../storage/meal/getMealById'
@@ -81,11 +88,13 @@ export function EditMeal() {
   }
 
   async function handleEditMealSuccess() {
-    await deleteMeal(id)
-    let newMeal: MealProps
-
-    if (editMealInfo !== undefined) {
-      newMeal = {
+    if (
+      mealName.trim().length !== 0 &&
+      mealDescription.trim().length !== 0 &&
+      formattedDate.length !== 0 &&
+      formattedTime.length !== 0
+    ) {
+      const newMeal: MealProps = {
         id,
         date: formattedDate,
         time: formattedTime,
@@ -93,8 +102,12 @@ export function EditMeal() {
         description: mealDescription,
         onDiet: isOnDiet === 'positive',
       }
+
+      await deleteMeal(id)
       await createMeal(newMeal)
       navigation.navigate('success', { onDiet: newMeal.onDiet })
+    } else {
+      Alert.alert('Erro', 'Você deixou um campo em branco')
     }
   }
 
@@ -124,60 +137,71 @@ export function EditMeal() {
   return (
     <>
       {editMealInfo ? (
-        <EditMealContainer>
-          <EditMealHeader>
-            <TouchableOpacity onPress={handleReturn}>
-              <ReturnIcon />
-            </TouchableOpacity>
-            <EditMealTitle>Editar refeição</EditMealTitle>
-          </EditMealHeader>
-          <EditMealContent>
-            <TextInput
-              label="Nome"
-              value={mealName}
-              onChangeText={setMealName}
-            />
-            <TextInput
-              label="Descrição"
-              multiline
-              style={{ height: 140 }}
-              value={mealDescription}
-              onChangeText={setMealDescription}
-            />
-            <DateTimeContainer>
-              <TextInput
-                label="Data"
-                parentStyle={{ flex: 1 }}
-                keyboardType="number-pad"
-                placeholder="DD/MM/AA"
-                onChangeText={(text) => handleDateChange(text)}
-                value={formattedDate}
-              />
-              <TextInput
-                label="Hora"
-                parentStyle={{ flex: 1 }}
-                keyboardType="number-pad"
-                placeholder="HH:MM"
-                onChangeText={(text) => handleTimeChange(text)}
-                value={formattedTime}
-              />
-            </DateTimeContainer>
-            <Label>Está dentro da dieta?</Label>
-            <SelectOnDiet>
-              <Select
-                type="positive"
-                isActive={isOnDiet === 'positive'}
-                onPress={() => toggleIsOnDiet('positive')}
-              />
-              <Select
-                type="negative"
-                isActive={isOnDiet === 'negative'}
-                onPress={() => toggleIsOnDiet('negative')}
-              />
-            </SelectOnDiet>
-            <Button title="Salvar alterações" onPress={handleEditMealSuccess} />
-          </EditMealContent>
-        </EditMealContainer>
+        <KeyboardAvoidingView
+          enabled={Platform.OS === 'ios'}
+          behavior="padding"
+          style={{ flex: 1 }}
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <EditMealContainer>
+              <EditMealHeader>
+                <TouchableOpacity onPress={handleReturn}>
+                  <ReturnIcon />
+                </TouchableOpacity>
+                <EditMealTitle>Editar refeição</EditMealTitle>
+              </EditMealHeader>
+              <EditMealContent>
+                <TextInput
+                  label="Nome"
+                  value={mealName}
+                  onChangeText={setMealName}
+                />
+                <TextInput
+                  label="Descrição"
+                  multiline
+                  style={{ height: 140 }}
+                  value={mealDescription}
+                  onChangeText={setMealDescription}
+                />
+                <DateTimeContainer>
+                  <TextInput
+                    label="Data"
+                    parentStyle={{ flex: 1 }}
+                    keyboardType="number-pad"
+                    placeholder="DD/MM/AA"
+                    onChangeText={(text) => handleDateChange(text)}
+                    value={formattedDate}
+                  />
+                  <TextInput
+                    label="Hora"
+                    parentStyle={{ flex: 1 }}
+                    keyboardType="number-pad"
+                    placeholder="HH:MM"
+                    onChangeText={(text) => handleTimeChange(text)}
+                    value={formattedTime}
+                  />
+                </DateTimeContainer>
+                <Label>Está dentro da dieta?</Label>
+                <SelectOnDiet>
+                  <Select
+                    type="positive"
+                    isActive={isOnDiet === 'positive'}
+                    onPress={() => toggleIsOnDiet('positive')}
+                  />
+                  <Select
+                    type="negative"
+                    isActive={isOnDiet === 'negative'}
+                    onPress={() => toggleIsOnDiet('negative')}
+                  />
+                </SelectOnDiet>
+                <Button
+                  title="Salvar alterações"
+                  onPress={handleEditMealSuccess}
+                />
+              </EditMealContent>
+            </EditMealContainer>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       ) : (
         <Loading />
       )}
