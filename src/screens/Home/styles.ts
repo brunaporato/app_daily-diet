@@ -76,3 +76,19 @@ export const ListHeader = styled.View`
 export const BottomGradient = styled(LinearGradient)`
   height: 160px;
 `
+
+export const EmptyListView = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+`
+
+export const EmptyListText = styled.Text`
+  text-align: center;
+
+  ${({ theme }) => css`
+    color: ${theme.COLORS.GRAY_400};
+    font-size: ${theme.FONT_SIZE.MD};
+    font-family: ${theme.FONT_FAMILY.REGULAR};
+  `}
+`

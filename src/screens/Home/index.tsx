@@ -1,5 +1,7 @@
 import {
   Avatar,
+  EmptyListText,
+  EmptyListView,
   HeaderContainer,
   HomeContainer,
   HomeText,
@@ -27,9 +29,9 @@ interface MealsByDateType {
 
 export function Home() {
   const [mealsByDate, setMealsByDate] = useState<MealsByDateType[]>()
-  const [percentOfDiet, setPercentOfDiet] = useState(0)
+  const [percentOfDiet, setPercentOfDiet] = useState<number>()
 
-  const isHealthy = percentOfDiet > 50
+  const isHealthy = percentOfDiet! > 50
 
   const { navigate } = useNavigation()
 
@@ -73,7 +75,7 @@ export function Home() {
       const { percentOfMealsOnDiet } = await getMealsData()
 
       setMealsByDate(mealsByDateData)
-      setPercentOfDiet(percentOfMealsOnDiet || 100)
+      setPercentOfDiet(percentOfMealsOnDiet || 0)
     } catch (error) {
       console.log(error)
     }
@@ -85,7 +87,7 @@ export function Home() {
 
   return (
     <>
-      {percentOfDiet !== 0 ? (
+      {mealsByDate ? (
         <HomeContainer>
           <HeaderContainer>
             <Image source={LogoImg} alt="Daily Diet's logo" />
@@ -114,6 +116,15 @@ export function Home() {
             renderItem={({ item }) => (
               <ListDay date={item.date} meals={item.meals} />
             )}
+            ListEmptyComponent={() => (
+              <EmptyListView>
+                <EmptyListText>
+                  Você ainda não tem nenhuma refeição cadastrada.
+                </EmptyListText>
+              </EmptyListView>
+            )}
+            contentContainerStyle={mealsByDate?.length === 0 && { flex: 1 }}
+            showsVerticalScrollIndicator={false}
           />
           {/* <BottomGradient
           colors={['#FAFAFA', 'rgba(250, 250, 250, 0.00)']}

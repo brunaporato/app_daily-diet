@@ -28,7 +28,11 @@ export function Dashboard() {
       const data = await getMealsData()
       setMealsData(data)
 
-      setIsHealthy(data.percentOfMealsOnDiet >= 50)
+      setIsHealthy(
+        !Number.isNaN(data.percentOfMealsOnDiet)
+          ? data.percentOfMealsOnDiet >= 50
+          : false,
+      )
       setIsDataLoaded(true)
     } catch (error) {
       Alert.alert('Erro', 'Não foi possível carregar os dados, tente novamente')
@@ -49,7 +53,11 @@ export function Dashboard() {
               <ReturnIcon isOnDiet={isHealthy} />
             </TouchableOpacity>
             <TitleNumberSpan
-              title={`${mealsData?.percentOfMealsOnDiet}%`}
+              title={
+                mealsData?.percentOfMealsOnDiet
+                  ? `${mealsData?.percentOfMealsOnDiet}%`
+                  : '0%'
+              }
               span="das refeições dentro da dieta"
             />
           </DashboardContainer>
