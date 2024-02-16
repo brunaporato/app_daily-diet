@@ -31,7 +31,7 @@ export function Home() {
   const [mealsByDate, setMealsByDate] = useState<MealsByDateType[]>()
   const [percentOfDiet, setPercentOfDiet] = useState<number>()
 
-  const isHealthy = percentOfDiet! > 50
+  const isHealthy = percentOfDiet! > 49
 
   const { navigate } = useNavigation()
 

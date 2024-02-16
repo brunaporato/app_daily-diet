@@ -30,7 +30,7 @@ export function Dashboard() {
 
       setIsHealthy(
         !Number.isNaN(data.percentOfMealsOnDiet)
-          ? data.percentOfMealsOnDiet >= 50
+          ? data.percentOfMealsOnDiet > 49
           : false,
       )
       setIsDataLoaded(true)
